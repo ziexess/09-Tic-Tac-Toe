@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+* {
+margin: 0;
+}
+body {
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+font-family: "Ga Maamli", sans-serif;
+}
+img, picture, video, canvas, svg {
+display: block;
+max-width: 100%;
+}
+input, button, textarea, select {
+font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+overflow-wrap: break-word;
+}
+#root, #__next {
+isolation: isolate;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 16px;
+}
+
+header {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+body {
+    background-color: #c4b5fd;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(3, 200px);
+    background-color: #6d28d9;
+}
+
+.game-board div{
+    border: 1px solid black;
+}
+
+.input-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+input {
+    appearance: none;
+    width: 300px;
+    border-radius: 10px;
+}
+
+label {
+    font-size: 2rem;
+}
