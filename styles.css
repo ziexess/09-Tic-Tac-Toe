@@ -9,7 +9,7 @@ margin: 0;
 body {
 line-height: 1.5;
 -webkit-font-smoothing: antialiased;
-font-family: "Ga Maamli", sans-serif;
+font-family: "Exo 2", sans-serif;
 }
 img, picture, video, canvas, svg {
 display: block;
@@ -36,6 +36,7 @@ header {
     font-size: 4rem;
     text-align: center;
     margin-bottom: 3rem;
+    font-weight: 800;
 }
 
 body {
@@ -44,21 +45,28 @@ body {
 
 .game-board {
     display: grid;
-    grid-template-columns: repeat(3, 200px);
-    grid-template-rows: repeat(3, 200px);
-    background-color: #6d28d9;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
 }
 
 .game-board div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
     border: 1px solid black;
+    font-weight: 800;
+    color: white;
+    background-color: #6d28d9;
+
 }
 
 .input-field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 2rem;
     gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 input {
@@ -69,4 +77,9 @@ input {
 
 label {
     font-size: 2rem;
+}
+
+button {
+    width: 90px;
+    border-radius: 10px;
 }
