@@ -1,6 +1,11 @@
 // Create gameBoard array
 const board = [];
+let playerOne;
+let playerTwo;
+const inputField = document.querySelector(".input-field");
 function gameBoard () {
+    const announcment = document.querySelector(".announcment");
+    const container = document.getElementById("game-board");
     const createBoard = () => {
     let rows = 3;
     let columns = 3;
@@ -17,8 +22,8 @@ function gameBoard () {
     const winner = () => {
         let i = 0;
         let value = '';
-        if (board[i][i] === board[i][i+1] && board[i][i+1] === board[i][i+2] && board[i][i] !== "") {value = board[i][i]}  else
-        if (board[i+1][i] === board[i+1][i+1] && board[i+1][i+1] === board[i+1][i+2] && board[i+1][i+2] !== "") {value = board[i+1][i]} else
+        if (board[i][i] === board[i][i+1] && board[i][i] === board[i][i+2] && board[i][i] !== "") {value = board[i][i]}  else
+        if (board[i+1][i+1] === board[i+1][i] && board[i+1][i+1] === board[i+1][i+2] && board[i+1][i+2] !== "") {value = board[i+1][i]} else
         if (board[i+2][i] === board[i+2][i+1] && board[i+2][i+1] === board[i+2][i+2] && board[i+2][i+2] !== "") {value = board[i+2][i]} else
         if (board[i][i] === board[i+1][i] && board[i+1][i] === board[i+2][i] && board[i+2][i] !== "") {value = board[i][i]} else
         if (board[i][i+1] === board[i+1][i+1] && board[i+1][i+1] === board[i+2][i+1] && board[i+2][i+1] !== "") {value = board[i][i+1]} else
@@ -27,18 +32,35 @@ function gameBoard () {
         if (board[i][i+2] === board[i+1][i+1] && board[i+1][i+1] === board[i+2][i] && board[i+2][i] !== "") {value = board[i][i+2]} else
         if (checkTie()){
             value = "tie";
-            return value;}
+            handleWinner(playerOne, value)}
         if (playerOne.value === value) {
-            playerOne.addScore();
-            return playerOne.name;
+            handleWinner(playerOne, value);
         } else
         if (playerTwo.value === value) {
-            playerTwo.addScore();
-            return playerTwo.name;} else {return value}
+            handleWinner(playerTwo, value);
+        } else {return value}
         }
-    const render = () => {
-        const container = document.getElementById("game-board");
-        
+
+    function handleWinner(player, value) {
+        if (value !== "tie") {
+            player.addScore();
+            reset();
+            announcment.textContent = `The Winner is ${player.name} with score of ${player.getScore()}!`
+        } else {
+            reset();
+            announcment.textContent = `it's a TIE!`
+        }
+        const newRound = document.createElement("button");
+            newRound.textContent = "New Round!"
+            inputField.appendChild(newRound);
+            newRound.addEventListener("click", () => {
+                announcment.textContent = ""
+                createBoard();
+                render();
+                inputField.removeChild(newRound);
+            })
+    }
+    const render = () => {        
         board.map((row, rowIndex) => {
             return row.map((item, colIndex) => {
             const newDiv = document.createElement("div");
@@ -47,11 +69,13 @@ function gameBoard () {
         
             newDiv.addEventListener("click", (event) => {
                 // shall alternate between players
-                const updatedValue = "X"; 
-        
-                event.target.textContent = updatedValue;
-        
-                board[rowIndex][colIndex] = updatedValue;
+                if (!winner() && event.target.textContent === "") {
+                    event.target.textContent = current;
+                    board[rowIndex][colIndex] = current;
+                    alternate()();
+                    winner();
+                }
+                
             });
         
             container.appendChild(newDiv);
@@ -59,7 +83,12 @@ function gameBoard () {
             });
         });
         }
-        return {createBoard, getBoard, winner, render}
+    const reset = () => {
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+          }
+    }
+        return {createBoard, getBoard, winner, render, reset}
     };
 
 // Create players factory function
@@ -69,12 +98,13 @@ function GenPlayer (name, value) {
     const addScore = () => score++;
     return {name, value, getScore, addScore};
 };
+   
 // Check tie condition
 function checkTie () {
     let allNonZero = true;
     for (let i = 0; i < gameBoard().getBoard().length; i++) {
         for (let j = 0; j < gameBoard().getBoard()[i].length; j++) {
-            if (gameBoard().getBoard()[i][j] === 0) {
+            if (gameBoard().getBoard()[i][j] === "") {
                 allNonZero = false;
                 break;
             }
@@ -84,11 +114,14 @@ function checkTie () {
         }
     }
 return allNonZero}
+
+function newRound () {
+    announcment.textContent = ""
+    gameBoard().createBoard();
+    gameBoard().render();
+}
 // DOM methods
-let playerOne;
-let playerTwo;
 function playerNames() {
-    const inputField = document.querySelector(".input-field");
     const firstInput = document.querySelector(".first-input");
     const secondInput = document.querySelector(".second-input");
     const label1 = document.createElement("label");
@@ -121,3 +154,13 @@ function playerNames() {
             }
     })  };
 playerNames();
+
+let current = "X";
+function alternate() {
+  
+    return function() {
+      const temp = current;
+      current = current === playerOne.value ? playerTwo.value : playerOne.value;
+      return temp;
+    };
+  }

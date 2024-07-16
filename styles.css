@@ -80,6 +80,19 @@ label {
 }
 
 button {
-    width: 90px;
+    width: fit-content;
     border-radius: 10px;
+}
+
+.new-round {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.announcment {
+    font-size: 3rem;
+    font-weight: 500;
+    color: #9333ea;
+    background-color: #d4d4d4;
+    border-radius: 15px;
 }
