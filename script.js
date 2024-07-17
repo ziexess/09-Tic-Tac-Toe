@@ -20,19 +20,24 @@ function gameBoard () {
     const getBoard = () => board;
     // Check win condition
     const winner = () => {
-        let i = 0;
         let value = '';
-        if (board[i][i] === board[i][i+1] && board[i][i] === board[i][i+2] && board[i][i] !== "") {value = board[i][i]}  else
-        if (board[i+1][i+1] === board[i+1][i] && board[i+1][i+1] === board[i+1][i+2] && board[i+1][i+2] !== "") {value = board[i+1][i]} else
-        if (board[i+2][i] === board[i+2][i+1] && board[i+2][i+1] === board[i+2][i+2] && board[i+2][i+2] !== "") {value = board[i+2][i]} else
-        if (board[i][i] === board[i+1][i] && board[i+1][i] === board[i+2][i] && board[i+2][i] !== "") {value = board[i][i]} else
-        if (board[i][i+1] === board[i+1][i+1] && board[i+1][i+1] === board[i+2][i+1] && board[i+2][i+1] !== "") {value = board[i][i+1]} else
-        if (board[i][i+2] === board[i+1][i+2] && board[i+1][i+2] === board[i+2][i+2] && board[i+2][i+2] !== "") {value = board[i][i+2]} else
-        if (board[i][i] === board[i+1][i+1] && board[i+1][i+1] === board[i+2][i+2] && board[i+2][i+2] !== "") {value = board[i][i]} else
-        if (board[i][i+2] === board[i+1][i+1] && board[i+1][i+1] === board[i+2][i] && board[i+2][i] !== "") {value = board[i][i+2]} else
+        for (let rowIndex=0; rowIndex < board.length; rowIndex++) {
+            
+            if (board[rowIndex].every(cell => cell === board[rowIndex][0] ) && board[rowIndex][0] !== "") {
+                value = board[rowIndex][0];
+                break;
+            }
+        }
+        for (let colIndex = 0; colIndex < board[0].length; colIndex++) {
+            if (board.every(row => row[colIndex] === board[0][colIndex] ) && board[0][colIndex] !== "" ) {
+                value = board[0][colIndex];
+                break;
+            }
+        }
+        // check for tie
         if (checkTie()){
             value = "tie";
-            handleWinner(playerOne, value)}
+            handleWinner("", value)}
         if (playerOne.value === value) {
             handleWinner(playerOne, value);
         } else
