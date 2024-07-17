@@ -51,14 +51,14 @@ function gameBoard () {
             announcment.textContent = `it's a TIE!`
         }
         const newRound = document.createElement("button");
-            newRound.textContent = "New Round!"
-            inputField.appendChild(newRound);
-            newRound.addEventListener("click", () => {
-                announcment.textContent = ""
-                createBoard();
-                render();
-                inputField.removeChild(newRound);
-            })
+        newRound.textContent = "New Round!"
+        inputField.appendChild(newRound);
+        newRound.addEventListener("click", () => {
+            announcment.textContent = ""
+            createBoard();
+            render();
+            inputField.removeChild(newRound);
+        })
     }
     const render = () => {        
         board.map((row, rowIndex) => {
@@ -66,23 +66,22 @@ function gameBoard () {
             const newDiv = document.createElement("div");
             newDiv.textContent = item;
             newDiv.setAttribute("data-index", `${rowIndex}-${colIndex}`);
-        
             newDiv.addEventListener("click", (event) => {
-                // shall alternate between players
                 if (!winner() && event.target.textContent === "") {
                     event.target.textContent = current;
                     board[rowIndex][colIndex] = current;
                     alternate()();
+                    if (current === playerOne.value) {announcment.textContent = `${playerOne.name}'s turn`} else 
+                    if (current === playerTwo.value) {announcment.textContent = `${playerTwo.name}'s turn`}
                     winner();
                 }
-                
             });
-        
             container.appendChild(newDiv);
-        
             });
         });
-        }
+        if (current === playerOne.value) {announcment.textContent = `${playerOne.name}'s turn`} else 
+        if (current === playerTwo.value) {announcment.textContent = `${playerTwo.name}'s turn`}
+    }
     const reset = () => {
         while (container.firstChild) {
             container.removeChild(container.firstChild);
