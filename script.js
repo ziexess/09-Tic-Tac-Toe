@@ -4,6 +4,8 @@ let playerOne;
 let playerTwo;
 const inputField = document.querySelector(".input-field");
 function gameBoard () {
+    let gameWon = false;
+    const result = () => gameWon;
     const announcment = document.querySelector(".announcment");
     const container = document.getElementById("game-board");
     const createBoard = () => {
@@ -21,18 +23,36 @@ function gameBoard () {
     // Check win condition
     const winner = () => {
         let value = '';
+        // check for rows
         for (let rowIndex=0; rowIndex < board.length; rowIndex++) {
             
             if (board[rowIndex].every(cell => cell === board[rowIndex][0] ) && board[rowIndex][0] !== "") {
                 value = board[rowIndex][0];
+                gameWon= true;
                 break;
             }
         }
+        // check for cols
         for (let colIndex = 0; colIndex < board[0].length; colIndex++) {
             if (board.every(row => row[colIndex] === board[0][colIndex] ) && board[0][colIndex] !== "" ) {
                 value = board[0][colIndex];
+                gameWon= true;
                 break;
             }
+        }
+        let diags1 = [];
+        let diags2 = [];
+        for (i=0; i<board.length; i++) {
+            diags1[i] = board[i][i];
+            diags2[i] = board[i][2-i];
+        }
+        if(diags1.every(cell => cell === diags1[0]) && diags1[0] !== "" ) {
+            value = diags1[0];
+            gameWon = true;
+        }
+        if (diags2.every(cell => cell === diags2[0]) && diags2[0] !== "") {
+            value = diags2[0];
+            gameWon = true;
         }
         // check for tie
         if (checkTie()){
@@ -46,7 +66,22 @@ function gameBoard () {
         } else {return value}
         }
 
-    function handleWinner(player, value) {
+        const checkTie = () => {
+            let allNonZero = true;
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board[i].length; j++) {
+                    if (board[i][j] === "") {
+                        allNonZero = false;
+                        break;
+                    }
+                }
+                if (!allNonZero) {
+                    break;
+                }
+            }
+        return allNonZero}
+
+    const handleWinner = (player, value) => {
         if (value !== "tie") {
             player.addScore();
             reset();
@@ -62,6 +97,7 @@ function gameBoard () {
             announcment.textContent = ""
             createBoard();
             render();
+            gameWon = false;
             inputField.removeChild(newRound);
         })
     }
@@ -72,7 +108,7 @@ function gameBoard () {
             newDiv.textContent = item;
             newDiv.setAttribute("data-index", `${rowIndex}-${colIndex}`);
             newDiv.addEventListener("click", (event) => {
-                if (!winner() && event.target.textContent === "") {
+                if (!result() && event.target.textContent === "") {
                     event.target.textContent = current;
                     board[rowIndex][colIndex] = current;
                     alternate()();
@@ -92,7 +128,7 @@ function gameBoard () {
             container.removeChild(container.firstChild);
           }
     }
-        return {createBoard, getBoard, winner, render, reset}
+        return {createBoard, getBoard, winner, render, reset, result}
     };
 
 // Create players factory function
@@ -103,27 +139,8 @@ function GenPlayer (name, value) {
     return {name, value, getScore, addScore};
 };
    
-// Check tie condition
-function checkTie () {
-    let allNonZero = true;
-    for (let i = 0; i < gameBoard().getBoard().length; i++) {
-        for (let j = 0; j < gameBoard().getBoard()[i].length; j++) {
-            if (gameBoard().getBoard()[i][j] === "") {
-                allNonZero = false;
-                break;
-            }
-        }
-        if (!allNonZero) {
-            break;
-        }
-    }
-return allNonZero}
 
-function newRound () {
-    announcment.textContent = ""
-    gameBoard().createBoard();
-    gameBoard().render();
-}
+
 // DOM methods
 function playerNames() {
     const firstInput = document.querySelector(".first-input");
